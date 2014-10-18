@@ -1,0 +1,30 @@
+{
+    "name": "soapbox/authorize-linkedin",
+    "description": "Linkedin authorization strategy for SoapBox/Authorize.",
+    "keywords": ["authentication", "oauth", "linkedin"],
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "SoapBox",
+            "email": "graham@soapboxhq.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "vcs",
+            "url":  "git@github.com:soapbox/authorize.git"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "soapbox/authorize": "dev-master",
+        "illuminate/support": "4.2.*",
+        "league/oauth2-client": "~0.3"
+    },
+    "autoload": {
+        "psr-0": {
+            "SoapBox\\AuthorizeLinkedin": "src/"
+        }
+    },
+    "minimum-stability": "stable"
+}
