@@ -17,16 +17,16 @@ class LinkedinStrategy extends SingleSignOnStrategy {
 	public function __construct($parameters = array(), $store = null, $load = null) {
 		if( !isset($parameters['api_key']) ||
 			!isset($parameters['api_secret']) ||
-			!isset($parameters['redirect_uri']) ) {
+			!isset($parameters['redirect_url']) ) {
 			throw new MissingArgumentsException(
-				'Required parameters api_key, or api_secret, or redirect_uri are missing'
+				'Required parameters api_key, or api_secret, or redirect_url are missing'
 			);
 		}
 
 		$this->linkedin = new LinkedIn(array(
 			'clientId'		=>	$parameters['api_key'],
 			'clientSecret'	=>	$parameters['api_secret'],
-			'redirectUri'	=>	$parameters['redirect_uri']
+			'redirectUri'	=>	$parameters['redirect_url']
 		));
 
 		if ($store != null && $load != null) {
@@ -45,30 +45,6 @@ class LinkedinStrategy extends SingleSignOnStrategy {
 		$this->linkedin->host = 'https://api.linkedin.com/';
 	}
 
-	public function login($parameters = array()) {
-		$store = LinkedinStrategy::$store;
-
-		if ( !isset($parameters['redirect_url']) ) {
-			throw new MissingArgumentsException(
-				'redirect_url is required'
-			);
-		}
-
-		if ( !isset($_GET['code'])) {
-
-			$this->linkedin->authorize();
-
-		} else {
-			// Try to get the access token using auth code
-
-			$requestToken =  $this->linkedin->getAccessToken('authorization_code', [
-				'code' => $_GET['code']
-			]);
-		}
-
-		return $this->getUser(['requestToken' => $requestToken]);
-	}
-
 	public function getUser($parameters = array()) {
 		if (!isset($parameters['accessToken'])) {
 			throw new AuthenticationException();
@@ -77,10 +53,8 @@ class LinkedinStrategy extends SingleSignOnStrategy {
 		$accessToken = $parameters['accessToken'];
 		$response = $this->linkedin->getUserDetails($accessToken);
 
-		dd($response);
-
 		$user = new User;
-		$user->id = $response->getProperty('id');
+		$user->id = $response->getProperty('uid');
 		$user->email = $response->getProperty('email');
 		$user->accessToken = $parameters['accessToken'];
 		$user->firstname = $response->getProperty('first_name');
