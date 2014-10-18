@@ -12,24 +12,14 @@ class AuthorizeLinkedinServiceProvider extends ServiceProvider {
 	 */
 	protected $defer = false;
 
-	// /**
-	//  * Bootstrap the application events.
-	//  *
-	//  * @return void
-	//  */
-	// public function boot()
-	// {
-	// 	$this->package('soapbox/authorize-linkedin');
-	// }
-
 	/**
-	 * Register the service provider.
+	 * Bootstrap the application events.
 	 *
 	 * @return void
 	 */
-	public function register()
+	public function boot()
 	{
-		StrategyFactory::register('linkedin', 'SoapBox\AuthorizeLinkedin\LinkedinStrategy');
+		$this->package('soapbox/authorize-linkedin');
 	}
 
 	/**
@@ -39,7 +29,7 @@ class AuthorizeLinkedinServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		//
+		StrategyFactory::register('linkedin', 'SoapBox\AuthorizeLinkedin\LinkedinStrategy');
 	}
 
 	/**
