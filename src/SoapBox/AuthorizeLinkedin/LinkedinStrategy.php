@@ -55,8 +55,9 @@ class LinkedinStrategy extends SingleSignOnStrategy {
 		$user->id = $response->uid;
 		$user->email = $response->email;
 		$user->accessToken = json_encode($accessToken);
-		$user->firstname = $response->firstName;
-		$user->lastname = $response->lastName;
+		$name = explode(' ', $response->name, 2);
+		$user->firstname = $name[0];
+		$user->lastname = $name[1];
 
 		return $user;
 	}
