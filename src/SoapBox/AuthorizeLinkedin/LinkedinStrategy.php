@@ -41,30 +41,48 @@ class LinkedinStrategy extends SingleSignOnStrategy {
 		$this->linkedin->host = 'https://api.linkedin.com/';
 	}
 
-	// public function login($parameters = array()) {
-	// 	$store = TwitterStrategy::$store;
+	public function login($parameters = array()) {
+		$store = LinkedinStrategy::$store;
 
-	// 	if ( !isset($parameters['redirect_url']) ) {
-	// 		throw new MissingArgumentsException(
-	// 			'redirect_url is required'
-	// 		);
-	// 	}
-
-	// 	$requestToken = $this->twitter->getRequestToken($parameters['redirect_url']);
-
-	// 	$store('twitter.oauth_token', $requestToken['oauth_token']);
-	// 	$store('twitter.oauth_token_secret', $requestToken['oauth_token_secret'], true);
-
-	// 	$token = $requestToken['oauth_token'];
-
-	// 	switch ($this->twitter->http_code) {
-	// 		case 200:
-	// 			Helpers::redirect($this->twitter->getAuthorizeURL($token, true));
-	// 			break;
-	// 		default:
-	// 			throw new AuthorizationException();
-	// 	}
-	// }
+		if ( !isset($parameters['redirect_url']) ) {
+			throw new MissingArgumentsException(
+				'redirect_url is required'
+			);
+		}
 
 
+		if ( !isset($_GET['code'])) {
+
+			$this->linkedin->authorize();
+
+		} else {
+			// Try to get the access token using auth code
+
+			$requestToken =  $this->twitter->getAccessToken('authorization_code', [
+				'code' => $_GET['code']
+			]);
+		}
+
+		return $this->getUser(['requestToken' => $requestToken]);
+	}
+
+	public function getUser($parameters = array()) {
+		if (!isset($parameters['requestToken'])) {
+			throw new AuthenticationException();
+		}
+
+		$requestToken = $parameters['requestToken'];
+		$response = $provider->getUserDetails($requestToken);
+
+		dd($response);
+
+		$user = new User;
+		$user->id = $response->getProperty('id');
+		$user->email = $response->getProperty('email');
+		$user->requestToken = $parameters['requestToken'];
+		$user->firstname = $response->getProperty('first_name');
+		$user->lastname = $response->getProperty('last_name');
+
+		return $user;
+	}
 }
