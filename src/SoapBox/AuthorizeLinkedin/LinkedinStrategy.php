@@ -50,7 +50,6 @@ class LinkedinStrategy extends SingleSignOnStrategy {
 			);
 		}
 
-
 		if ( !isset($_GET['code'])) {
 
 			$this->linkedin->authorize();
@@ -58,7 +57,7 @@ class LinkedinStrategy extends SingleSignOnStrategy {
 		} else {
 			// Try to get the access token using auth code
 
-			$requestToken =  $this->twitter->getAccessToken('authorization_code', [
+			$requestToken =  $this->linkedin->getAccessToken('authorization_code', [
 				'code' => $_GET['code']
 			]);
 		}
@@ -67,22 +66,40 @@ class LinkedinStrategy extends SingleSignOnStrategy {
 	}
 
 	public function getUser($parameters = array()) {
-		if (!isset($parameters['requestToken'])) {
+		if (!isset($parameters['accessToken'])) {
 			throw new AuthenticationException();
 		}
 
-		$requestToken = $parameters['requestToken'];
-		$response = $provider->getUserDetails($requestToken);
+		$accessToken = $parameters['accessToken'];
+		$response = $this->linkedin->getUserDetails($accessToken);
 
 		dd($response);
 
 		$user = new User;
 		$user->id = $response->getProperty('id');
 		$user->email = $response->getProperty('email');
-		$user->requestToken = $parameters['requestToken'];
+		$user->accessToken = $parameters['accessToken'];
 		$user->firstname = $response->getProperty('first_name');
 		$user->lastname = $response->getProperty('last_name');
 
 		return $user;
 	}
+
+	public function endPoint($parameters = array()) {
+
+		if ( !isset($_GET['code'])) {
+
+			Helpers::redirect($this->linkedin->getAuthorizationUrl());
+
+		} else {
+			// Try to get the access token using auth code
+
+			$accessToken =  $this->linkedin->getAccessToken('authorization_code', [
+				'code' => $_GET['code']
+			]);
+		}
+
+		return $this->getUser(['accessToken' => $accessToken]);
+	}
 }
+
