@@ -1,6 +1,10 @@
 <?php namespace SoapBox\AuthorizeLinkedin;
 
+use SoapBox\Authorize\Helpers;
+use SoapBox\Authorize\User;
 use SoapBox\Authorize\Strategies\SingleSignOnStrategy;
+use SoapBox\Authorize\Exceptions\MissingArgumentsException;
+use SoapBox\Authorize\Exceptions\AuthenticationException;
 use League\OAuth2\Client\Provider\LinkedIn as LinkedIn;
 
 class LinkedinStrategy extends SingleSignOnStrategy {
