@@ -5,11 +5,10 @@ use SoapBox\Authorize\User;
 use SoapBox\Authorize\Strategies\SingleSignOnStrategy;
 use SoapBox\Authorize\Exceptions\MissingArgumentsException;
 use SoapBox\Authorize\Exceptions\AuthenticationException;
-use League\OAuth2\Client\Provider\LinkedIn as LinkedIn;
 
 class LinkedinStrategy extends SingleSignOnStrategy {
 
-	private $linkedin;
+	private $provider;
 
 	public static $store = null;
 	public static $load = null;
@@ -17,17 +16,14 @@ class LinkedinStrategy extends SingleSignOnStrategy {
 	public function __construct($parameters = array(), $store = null, $load = null) {
 		if( !isset($parameters['api_key']) ||
 			!isset($parameters['api_secret']) ||
-			!isset($parameters['redirect_url']) ) {
+			!isset($parameters['redirect_url']) ||
+			!isset($parameters['provider']) ) {
 			throw new MissingArgumentsException(
-				'Required parameters api_key, or api_secret, or redirect_url are missing'
+				'Required parameters api_key, api_secret, redirect_url, or provider are missing'
 			);
 		}
 
-		$this->linkedin = new LinkedIn(array(
-			'clientId'		=>	$parameters['api_key'],
-			'clientSecret'	=>	$parameters['api_secret'],
-			'redirectUri'	=>	$parameters['redirect_url']
-		));
+		$this->provider = ProviderFactory::get($parameters['provider'], $parameters);
 
 		if ($store != null && $load != null) {
 			LinkedinStrategy::$store = $store;
@@ -42,7 +38,7 @@ class LinkedinStrategy extends SingleSignOnStrategy {
 			};
 		}
 
-		$this->linkedin->host = 'https://api.linkedin.com/';
+		$this->provider->host = 'https://api.linkedin.com/';
 	}
 
 	public function login($parameters = array()) {
@@ -55,7 +51,7 @@ class LinkedinStrategy extends SingleSignOnStrategy {
 		}
 
 		$accessToken = $parameters['accessToken'];
-		$response = $this->linkedin->getUserDetails($accessToken);
+		$response = $this->provider->getUserDetails($accessToken);
 
 		$user = new User;
 		$user->id = $response->uid;
@@ -71,12 +67,12 @@ class LinkedinStrategy extends SingleSignOnStrategy {
 
 		if ( !isset($_GET['code'])) {
 
-			Helpers::redirect($this->linkedin->getAuthorizationUrl());
+			Helpers::redirect($this->provider->getAuthorizationUrl());
 
 		} else {
 			// Try to get the access token using auth code
 
-			$accessToken =  $this->linkedin->getAccessToken('authorization_code', [
+			$accessToken =  $this->provider->getAccessToken('authorization_code', [
 				'code' => $_GET['code']
 			]);
 		}
