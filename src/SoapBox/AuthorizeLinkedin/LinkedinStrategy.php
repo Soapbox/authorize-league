@@ -45,6 +45,10 @@ class LinkedinStrategy extends SingleSignOnStrategy {
 		$this->linkedin->host = 'https://api.linkedin.com/';
 	}
 
+	public function login($parameters = array()) {
+		return $this->endPoint($parameters);
+	}
+
 	public function getUser($parameters = array()) {
 		if (!isset($parameters['accessToken'])) {
 			throw new AuthenticationException();
