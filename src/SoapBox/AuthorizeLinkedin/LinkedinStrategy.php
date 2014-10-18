@@ -37,8 +37,6 @@ class LinkedinStrategy extends SingleSignOnStrategy {
 				return $_SESSION[$key];
 			};
 		}
-
-		$this->provider->host = 'https://api.linkedin.com/';
 	}
 
 	public function login($parameters = array()) {
