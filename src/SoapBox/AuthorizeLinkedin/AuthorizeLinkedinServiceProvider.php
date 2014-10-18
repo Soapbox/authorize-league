@@ -29,7 +29,13 @@ class AuthorizeLinkedinServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
+		StrategyFactory::register('eventbrite', 'SoapBox\AuthorizeLinkedin\LinkedinStrategy');
+		StrategyFactory::register('facebook', 'SoapBox\AuthorizeLinkedin\LinkedinStrategy');
+		StrategyFactory::register('github', 'SoapBox\AuthorizeLinkedin\LinkedinStrategy');
+		StrategyFactory::register('google', 'SoapBox\AuthorizeLinkedin\LinkedinStrategy');
+		StrategyFactory::register('instagram', 'SoapBox\AuthorizeLinkedin\LinkedinStrategy');
 		StrategyFactory::register('linkedin', 'SoapBox\AuthorizeLinkedin\LinkedinStrategy');
+		StrategyFactory::register('microsoft', 'SoapBox\AuthorizeLinkedin\LinkedinStrategy');
 	}
 
 	/**

@@ -69,10 +69,16 @@ class LinkedinStrategy extends SingleSignOnStrategy {
 
 		} else {
 			// Try to get the access token using auth code
-
-			$accessToken =  $this->provider->getAccessToken('authorization_code', [
-				'code' => $_GET['code']
-			]);
+			if(strtolower($parameters['provider']) == 'eventbrite') {
+				$accessToken =  $this->provider->getAccessToken('authorization_code', [
+					'code' => $_GET['code'],
+					'grant_type' => 'authorization_code'
+				]);
+			} else {
+				$accessToken =  $this->provider->getAccessToken('authorization_code', [
+					'code' => $_GET['code']
+				]);
+			}
 		}
 
 		return $this->getUser(['accessToken' => $accessToken]);
