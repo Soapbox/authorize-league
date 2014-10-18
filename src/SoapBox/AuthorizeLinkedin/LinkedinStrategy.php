@@ -58,11 +58,11 @@ class LinkedinStrategy extends SingleSignOnStrategy {
 		$response = $this->linkedin->getUserDetails($accessToken);
 
 		$user = new User;
-		$user->id = $response->getProperty('uid');
-		$user->email = $response->getProperty('email');
-		$user->accessToken = $parameters['accessToken'];
-		$user->firstname = $response->getProperty('first_name');
-		$user->lastname = $response->getProperty('last_name');
+		$user->id = $response->uid;
+		$user->email = $response->email;
+		$user->accessToken = json_encode($accessToken);
+		$user->firstname = $response->firstName;
+		$user->lastname = $response->lastName;
 
 		return $user;
 	}
