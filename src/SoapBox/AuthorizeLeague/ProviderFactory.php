@@ -1,4 +1,4 @@
-<?php namespace SoapBox\AuthorizeLinkedin;
+<?php namespace SoapBox\AuthorizeLeague;
 
 use League\OAuth2\Client\Provider\Eventbrite as Eventbrite;
 use League\OAuth2\Client\Provider\Facebook as Facebook;

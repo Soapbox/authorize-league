@@ -1,4 +1,4 @@
-<?php namespace SoapBox\AuthorizeLinkedin;
+<?php namespace SoapBox\AuthorizeLeague;
 
 use SoapBox\Authorize\Helpers;
 use SoapBox\Authorize\User;
@@ -6,7 +6,7 @@ use SoapBox\Authorize\Strategies\SingleSignOnStrategy;
 use SoapBox\Authorize\Exceptions\MissingArgumentsException;
 use SoapBox\Authorize\Exceptions\AuthenticationException;
 
-class LinkedinStrategy extends SingleSignOnStrategy {
+class LeagueStrategy extends SingleSignOnStrategy {
 
 	private $provider;
 
@@ -26,14 +26,14 @@ class LinkedinStrategy extends SingleSignOnStrategy {
 		$this->provider = ProviderFactory::get($parameters['provider'], $parameters);
 
 		if ($store != null && $load != null) {
-			LinkedinStrategy::$store = $store;
-			LinkedinStrategy::$load = $load;
+			LeagueStrategy::$store = $store;
+			LeagueStrategy::$load = $load;
 		} else {
 			session_start();
-			LinkedinStrategy::$store = function($key, $value) {
+			LeagueStrategy::$store = function($key, $value) {
 				$_SESSION[$key] = $value;
 			};
-			LinkedinStrategy::$load = function($key) {
+			LeagueStrategy::$load = function($key) {
 				return $_SESSION[$key];
 			};
 		}

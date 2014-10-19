@@ -1,7 +1,7 @@
 {
-    "name": "soapbox/authorize-linkedin",
-    "description": "Linkedin authorization strategy for SoapBox/Authorize.",
-    "keywords": ["authentication", "oauth", "linkedin"],
+    "name": "soapbox/authorize-league",
+    "description": "Provider authorization strategy for SoapBox/Authorize.",
+    "keywords": ["authentication", "oauth", "league"],
     "license": "proprietary",
     "authors": [
         {
@@ -23,7 +23,7 @@
     },
     "autoload": {
         "psr-0": {
-            "SoapBox\\AuthorizeLinkedin": "src/"
+            "SoapBox\\AuthorizeLeague": "src/"
         }
     },
     "minimum-stability": "stable"
