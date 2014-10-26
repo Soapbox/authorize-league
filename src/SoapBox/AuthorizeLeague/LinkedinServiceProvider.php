@@ -3,7 +3,7 @@
 use Illuminate\Support\ServiceProvider;
 use SoapBox\Authorize\StrategyFactory;
 
-class AuthorizeLeagueServiceProvider extends ServiceProvider {
+class LinkedinServiceProvider extends ServiceProvider {
 
 	/**
 	 * Indicates if loading of the provider is deferred.
@@ -29,13 +29,7 @@ class AuthorizeLeagueServiceProvider extends ServiceProvider {
 	 */
 	public function register()
 	{
-		StrategyFactory::register('eventbrite', 'SoapBox\AuthorizeLeague\LeagueStrategy');
-		// StrategyFactory::register('facebook', 'SoapBox\AuthorizeLeague\LeagueStrategy');
-		StrategyFactory::register('github', 'SoapBox\AuthorizeLeague\LeagueStrategy');
-		// StrategyFactory::register('google', 'SoapBox\AuthorizeLeague\LeagueStrategy');
-		StrategyFactory::register('instagram', 'SoapBox\AuthorizeLeague\LeagueStrategy');
 		StrategyFactory::register('linkedin', 'SoapBox\AuthorizeLeague\LeagueStrategy');
-		StrategyFactory::register('microsoft', 'SoapBox\AuthorizeLeague\LeagueStrategy');
 	}
 
 	/**
