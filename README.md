@@ -1,5 +1,5 @@
 # Authorize-League
-[Authorize-League](http://github.com/soapbox/authorize-league) a collection of oauth login providers.
+[Authorize](http://github.com/soapbox/authorize) strategy for SharePoint authentication.
 
 ## Getting Started
 - Install [Authorize](http://github.com/soapbox/authorize) into your application
