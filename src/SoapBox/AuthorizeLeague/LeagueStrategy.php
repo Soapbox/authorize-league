@@ -5,15 +5,29 @@ use SoapBox\Authorize\User;
 use SoapBox\Authorize\Strategies\SingleSignOnStrategy;
 use SoapBox\Authorize\Exceptions\MissingArgumentsException;
 use SoapBox\Authorize\Exceptions\AuthenticationException;
+use SoapBox\Authorize\Session;
+use SoapBox\Authorize\Router;
 
 class LeagueStrategy extends SingleSignOnStrategy {
 
 	private $provider;
 
-	public static $store = null;
-	public static $load = null;
+	/**
+	 * The session that can be used to store session data between
+	 * requests / redirects
+	 *
+	 * @var Session
+	 */
+	private $session;
 
-	public function __construct($parameters = array(), $store = null, $load = null) {
+	/**
+	 * The router that can be used to redirect the user between views
+	 *
+	 * @var Router
+	 */
+	private $router;
+
+	public function __construct($parameters = array(), Session $session, Router $router) {
 		if( !isset($parameters['api_key']) ||
 			!isset($parameters['api_secret']) ||
 			!isset($parameters['redirect_url']) ||
@@ -24,23 +38,34 @@ class LeagueStrategy extends SingleSignOnStrategy {
 		}
 
 		$this->provider = ProviderFactory::get($parameters['provider'], $parameters);
-
-		if ($store != null && $load != null) {
-			LeagueStrategy::$store = $store;
-			LeagueStrategy::$load = $load;
-		} else {
-			session_start();
-			LeagueStrategy::$store = function($key, $value) {
-				$_SESSION[$key] = $value;
-			};
-			LeagueStrategy::$load = function($key) {
-				return $_SESSION[$key];
-			};
-		}
+		$this->session = $session;
+		$this->router = $router;
 	}
 
 	public function login($parameters = array()) {
-		return $this->endPoint($parameters);
+
+		if (isset($parameters['code'])) {
+			$settings = ['code' => $parameters];
+
+			if ($provider === 'eventbrite') {
+				$settings['grant_type'] = 'authorization_code';
+			}
+
+			$accessToken = $this->provider->getAccessToken('authorization_code', $settings);
+		}
+
+		if (isset($parameters['access_token'])) {
+			$accessToken = $parameters['access_token'];
+		}
+
+		if (isset($accessToken)) {
+			$response = $this->provider->getUserDetails($accessToken);
+			if (isset($response)) {
+				return $accessToken;
+			}
+		}
+
+		return false;
 	}
 
 	public function getUser($parameters = array()) {
@@ -62,11 +87,15 @@ class LeagueStrategy extends SingleSignOnStrategy {
 		return $user;
 	}
 
+	public function expects() {
+		return ['code'];
+	}
+
 	public function endPoint($parameters = array()) {
 
 		if ( !isset($_GET['code'])) {
 
-			Helpers::redirect($this->provider->getAuthorizationUrl());
+			$this->router->redirect($this->provider->getAuthorizationUrl());
 
 		} else {
 			// Try to get the access token using auth code
