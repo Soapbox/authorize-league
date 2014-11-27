@@ -42,6 +42,10 @@ class LeagueStrategy extends SingleSignOnStrategy {
 		$this->router = $router;
 	}
 
+	public function expects() {
+		return ['code'];
+	}
+
 	public function login($parameters = array()) {
 
 		if (isset($parameters['code'])) {
@@ -68,12 +72,11 @@ class LeagueStrategy extends SingleSignOnStrategy {
 		return false;
 	}
 
-	public function getUser($parameters = array()) {
-		if (!isset($parameters['accessToken'])) {
+	public function getUser($accessToken) {
+		if (!$this->isAccessToken($accessToken)) {
 			throw new AuthenticationException();
 		}
 
-		$accessToken = $parameters['accessToken'];
 		$response = $this->provider->getUserDetails($accessToken);
 
 		$user = new User;
@@ -85,33 +88,6 @@ class LeagueStrategy extends SingleSignOnStrategy {
 		$user->lastname = $name[1];
 
 		return $user;
-	}
-
-	public function expects() {
-		return ['code'];
-	}
-
-	public function endPoint($parameters = array()) {
-
-		if ( !isset($_GET['code'])) {
-
-			$this->router->redirect($this->provider->getAuthorizationUrl());
-
-		} else {
-			// Try to get the access token using auth code
-			if(strtolower($parameters['provider']) == 'eventbrite') {
-				$accessToken =  $this->provider->getAccessToken('authorization_code', [
-					'code' => $_GET['code'],
-					'grant_type' => 'authorization_code'
-				]);
-			} else {
-				$accessToken =  $this->provider->getAccessToken('authorization_code', [
-					'code' => $_GET['code']
-				]);
-			}
-		}
-
-		return $this->getUser(['accessToken' => $accessToken]);
 	}
 }
 
