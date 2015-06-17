@@ -27,7 +27,8 @@ class ProviderFactory {
 				return new Github(array(
 					'clientId'		=>	$settings['api_key'],
 					'clientSecret'	=>	$settings['api_secret'],
-					'redirectUri'	=>	$settings['redirect_url']
+					'redirectUri'	=>	$settings['redirect_url'],
+					'scopes'		=>	['user']
 				));
 			case 'google':
 				return new Google(array(
