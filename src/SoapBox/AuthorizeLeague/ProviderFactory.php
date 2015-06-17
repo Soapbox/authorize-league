@@ -46,7 +46,8 @@ class ProviderFactory {
 				return new LinkedIn(array(
 					'clientId'		=>	$settings['api_key'],
 					'clientSecret'	=>	$settings['api_secret'],
-					'redirectUri'	=>	$settings['redirect_url']
+					'redirectUri'	=>	$settings['redirect_url'],
+					'scopes'		=>	['r_basicprofile', 'r_emailaddress']
 				));
 			case 'microsoft':
 				return new Microsoft(array(
