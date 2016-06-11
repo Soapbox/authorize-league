@@ -55,6 +55,12 @@ class ProviderFactory {
 					'clientSecret'	=>	$settings['api_secret'],
 					'redirectUri'	=>	$settings['redirect_url']
 				));
+			case 'slack':
+				return new Microsoft(array(
+					'clientId'		=>	$settings['api_key'],
+					'clientSecret'	=>	$settings['api_secret'],
+					'redirectUri'	=>	$settings['redirect_url']
+				));
 		}
 	}
 }
