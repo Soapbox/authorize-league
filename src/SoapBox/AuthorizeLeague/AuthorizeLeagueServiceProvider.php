@@ -36,7 +36,6 @@ class AuthorizeLeagueServiceProvider extends ServiceProvider {
 		StrategyFactory::register('instagram', 'SoapBox\AuthorizeLeague\LeagueStrategy');
 		StrategyFactory::register('linkedin', 'SoapBox\AuthorizeLeague\LeagueStrategy');
 		StrategyFactory::register('microsoft', 'SoapBox\AuthorizeLeague\LeagueStrategy');
-		StrategyFactory::register('slack', 'SoapBox\AuthorizeLeague\LeagueStrategy');
 	}
 
 	/**
