@@ -56,8 +56,8 @@ class LeagueStrategy extends SingleSignOnStrategy {
 		$user->email = $response->email;
 		$user->accessToken = json_encode($accessToken);
 		$name = explode(' ', $response->name, 2);
-		$user->firstname = $name[0];
-		$user->lastname = $name[1];
+		$user->firstname = (isset($name[0])) ? $name[0] : '';
+		$user->lastname = (isset($name[1])) ? $name[1] : '';
 
 		return $user;
 	}
