@@ -1,5 +1,8 @@
 <?php namespace SoapBox\AuthorizeLeague\Providers;
 
+/**
+ * Backported from https://github.com/adam-paterson/oauth2-slack
+ */
 class SlackResourceOwner
 {
     protected $response;

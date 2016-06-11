@@ -8,6 +8,8 @@ use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 
 /**
  * Class Slack
+ *
+ * Backported from https://github.com/adam-paterson/oauth2-slack
  */
 class Slack extends AbstractProvider
 {
