@@ -1,9 +1,10 @@
 <?php namespace SoapBox\AuthorizeLeague\Providers;
 
+use League\OAuth2\Client\Entity\User;
+use Psr\Http\Message\ResponseInterface;
+use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
-use League\OAuth2\Client\Token\AccessToken;
-use Psr\Http\Message\ResponseInterface;
 
 /**
  * Class Slack
@@ -44,7 +45,7 @@ class Slack extends AbstractProvider
         $authorizedUser = $this->getAuthorizedUser($token);
 
         $params = [
-            'token' => $token->getToken(),
+            'token' => $token->accessToken,
             'user'  => $authorizedUser->getId()
         ];
 
@@ -64,34 +65,6 @@ class Slack extends AbstractProvider
     }
 
     /**
-     * Checks a provider response for errors.
-     *
-     * @throws IdentityProviderException
-     *
-     * @param  ResponseInterface $response
-     * @param  array|string $data Parsed response data
-     *
-     * @return void
-     */
-    protected function checkResponse(ResponseInterface $response, $data)
-    {
-
-    }
-
-    /**
-     * Create new resources owner using the generated access token.
-     *
-     * @param array $response
-     * @param AccessToken $token
-     *
-     * @return SlackResourceOwner
-     */
-    protected function createResourceOwner(array $response, AccessToken $token)
-    {
-        return new SlackResourceOwner($response);
-    }
-
-    /**
      * @param AccessToken $token
      *
      * @return mixed
@@ -99,10 +72,7 @@ class Slack extends AbstractProvider
     public function fetchAuthorizedUserDetails(AccessToken $token)
     {
         $url = $this->getAuthorizedUserTestUrl($token);
-
-        $request = $this->getAuthenticatedRequest(self::METHOD_GET, $url, $token);
-
-        return $this->getResponse($request);
+        return $this->fetchProviderData($url);
     }
 
     /**
@@ -113,8 +83,7 @@ class Slack extends AbstractProvider
     public function getAuthorizedUser(AccessToken $token)
     {
         $response = $this->fetchAuthorizedUserDetails($token);
-
-        return $this->createAuthorizedUser($response);
+        return $this->createAuthorizedUser((array) json_decode($response));
     }
 
     /**
@@ -129,25 +98,16 @@ class Slack extends AbstractProvider
 
     public function userDetails($response, \League\OAuth2\Client\Token\AccessToken $token)
     {
-        dd($response);
-        $slack = $this->createAuthorizedUser($response);
         $user = new User();
 
         $user->exchangeArray([
-            'uid' => $slack->getId(),
-            'name' => $slack->getUser(),
-            'firstname' => $slack->getUser(),
-            'lastname' => $slack->getUser(),
-            'email' => $email,
-            'location' => $location,
-            'description' => $description,
-            'imageurl' => $imageUrl,
-            'gender' => $gender,
-            'locale' => $locale,
-            'urls' => [ 'Facebook' => $response->link ],
+            'uid' => $response->user->id,
+            'name' => $response->user->name,
+            'firstname' => $response->user->profile->real_name,
+            'lastname' => '',
+            'email' => $response->user->profile->email
         ]);
 
-        return $user;
         return $user;
     }
 }

@@ -1,8 +1,6 @@
 <?php namespace SoapBox\AuthorizeLeague\Providers;
 
-use League\OAuth2\Client\Provider\ResourceOwnerInterface;
-
-class SlackResourceOwner implements ResourceOwnerInterface
+class SlackResourceOwner
 {
     protected $response;
 
