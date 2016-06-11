@@ -111,8 +111,8 @@ class Slack extends AbstractProvider
         $user->exchangeArray([
             'uid' => $response->user->id,
             'name' => $name,
-            'firstname' => $response->user->profile->first_name,
-            'lastname' => $response->user->profile->last_name,
+            'firstname' => (isset($response->user->profile->first_name)) ? $response->user->profile->first_name : null,
+            'lastname' => (isset($response->user->profile->last_name)) ? $response->user->profile->last_name : null,
             'email' => $response->user->profile->email
         ]);
 
