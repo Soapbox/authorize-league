@@ -10,6 +10,8 @@ use Psr\Http\Message\ResponseInterface;
  */
 class Slack extends AbstractProvider
 {
+    public $scopes = ['users:read'];
+
     /**
      * Returns the base URL for authorizing a client.
      *
@@ -87,14 +89,6 @@ class Slack extends AbstractProvider
     protected function createResourceOwner(array $response, AccessToken $token)
     {
         return new SlackResourceOwner($response);
-    }
-
-    /**
-     * @return array
-     */
-    protected function getDefaultScopes()
-    {
-        return ['users:read'];
     }
 
     /**

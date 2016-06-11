@@ -1,12 +1,13 @@
 <?php namespace SoapBox\AuthorizeLeague;
 
-use League\OAuth2\Client\Provider\Eventbrite as Eventbrite;
-use League\OAuth2\Client\Provider\Facebook as Facebook;
+use SoapBox\AuthorizeLeague\Providers\Slack;
 use League\OAuth2\Client\Provider\Github as Github;
 use League\OAuth2\Client\Provider\Google as Google;
-use League\OAuth2\Client\Provider\Instagram as Instagram;
+use League\OAuth2\Client\Provider\Facebook as Facebook;
 use League\OAuth2\Client\Provider\LinkedIn as LinkedIn;
+use League\OAuth2\Client\Provider\Instagram as Instagram;
 use League\OAuth2\Client\Provider\Microsoft as Microsoft;
+use League\OAuth2\Client\Provider\Eventbrite as Eventbrite;
 
 class ProviderFactory {
 	public static function get($provider, array $settings) {
@@ -56,7 +57,7 @@ class ProviderFactory {
 					'redirectUri'	=>	$settings['redirect_url']
 				));
 			case 'slack':
-				return new Microsoft(array(
+				return new Slack(array(
 					'clientId'		=>	$settings['api_key'],
 					'clientSecret'	=>	$settings['api_secret'],
 					'redirectUri'	=>	$settings['redirect_url']
